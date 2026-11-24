@@ -1,5 +1,6 @@
+import { ViewTransition } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Focus, QrCode, ScanLine, Sparkles, Truck } from "lucide-react";
+import { ArrowUpRight, Focus, Layers, QrCode, ScanLine, SlidersHorizontal, Sparkles, Truck } from "lucide-react";
 
 import { siteConfig } from "@/config/site";
 import { featuredBody, featuredLens, sampleExif } from "@/data/showcase";
@@ -11,6 +12,7 @@ import { Container } from "@/components/layout/container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FocusFrame } from "@/components/ui/focus-frame";
+import { ProductMedia, productMediaTransitionName } from "@/components/product/product-media";
 import { SpecChip } from "@/components/ui/spec-chip";
 
 export default function HomePage() {
@@ -89,27 +91,45 @@ export default function HomePage() {
           </BentoCard>
 
           {/* Featured body */}
-          <BentoCard span="2x1" focusable className="gap-4">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <BentoEyebrow>Body · {SENSOR_LABELS[body.sensor_size]}</BentoEyebrow>
-                <h3 className="mt-2 text-xl font-semibold">{featuredBody.name}</h3>
+          <BentoCard span="2x1" focusable className="gap-4 sm:flex-row">
+            <Link
+              href={`/products/${featuredBody.slug}`}
+              className="-m-2 shrink-0 self-start overflow-hidden rounded-xl sm:w-2/5"
+              aria-label={featuredBody.name}
+            >
+              <ViewTransition name={productMediaTransitionName(featuredBody.slug)} share="morph" default="none">
+                <ProductMedia
+                  name={featuredBody.name}
+                  category="body"
+                  seed={featuredBody.slug}
+                  className="aspect-[4/3] w-full rounded-xl"
+                  iconClassName="size-10"
+                  priority
+                />
+              </ViewTransition>
+            </Link>
+            <div className="flex min-w-0 flex-1 flex-col gap-4">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <BentoEyebrow>Body · {SENSOR_LABELS[body.sensor_size]}</BentoEyebrow>
+                  <h3 className="mt-2 text-xl font-semibold">{featuredBody.name}</h3>
+                </div>
+                <Badge variant="success">In stock</Badge>
               </div>
-              <Badge variant="success">In stock</Badge>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <SpecChip label="Sensor" value={`${body.megapixels}MP`} />
-              <SpecChip label="ISO" value={formatIsoRange(body).replace("ISO ", "")} />
-              <SpecChip label="IBIS" value={body.ibis_stops ? `${body.ibis_stops} stops` : "—"} />
-              <SpecChip label="Video" value={body.video_max} />
-            </div>
-            <div className="mt-auto flex items-center justify-between">
-              <span className="spec-figure text-lg font-semibold">{formatVnd(featuredBody.price)}</span>
-              <Button size="sm" variant="outline" asChild>
-                <Link href={`/products/${featuredBody.slug}`}>
-                  Details <ArrowUpRight />
-                </Link>
-              </Button>
+              <div className="flex flex-wrap gap-2">
+                <SpecChip label="Sensor" value={`${body.megapixels}MP`} />
+                <SpecChip label="ISO" value={formatIsoRange(body).replace("ISO ", "")} />
+                <SpecChip label="IBIS" value={body.ibis_stops ? `${body.ibis_stops} stops` : "—"} />
+                <SpecChip label="Video" value={body.video_max} />
+              </div>
+              <div className="mt-auto flex items-center justify-between">
+                <span className="spec-figure text-lg font-semibold">{formatVnd(featuredBody.price)}</span>
+                <Button size="sm" variant="outline" asChild>
+                  <Link href={`/products/${featuredBody.slug}`}>
+                    Details <ArrowUpRight />
+                  </Link>
+                </Button>
+              </div>
             </div>
           </BentoCard>
 
@@ -129,9 +149,29 @@ export default function HomePage() {
 
           {/* Featured lens */}
           <BentoCard focusable className="gap-3">
-            <Focus className="size-5 text-primary" />
-            <BentoEyebrow>Lens</BentoEyebrow>
-            <h3 className="font-semibold leading-snug">{featuredLens.name}</h3>
+            <Link
+              href={`/products/${featuredLens.slug}`}
+              className="-mx-2 -mt-2 overflow-hidden rounded-xl"
+              aria-label={featuredLens.name}
+            >
+              <ViewTransition name={productMediaTransitionName(featuredLens.slug)} share="morph" default="none">
+                <ProductMedia
+                  name={featuredLens.name}
+                  category="lens"
+                  seed={featuredLens.slug}
+                  className="aspect-[16/9] w-full rounded-xl"
+                  iconClassName="size-8"
+                />
+              </ViewTransition>
+            </Link>
+            <BentoEyebrow className="flex items-center gap-1.5">
+              <Focus className="size-3.5 text-primary" /> Lens
+            </BentoEyebrow>
+            <h3 className="font-semibold leading-snug">
+              <Link href={`/products/${featuredLens.slug}`} className="hover:text-primary">
+                {featuredLens.name}
+              </Link>
+            </h3>
             <div className="flex flex-wrap gap-2">
               <SpecChip label="FL" value={formatFocalLength(lens)} />
               <SpecChip label="Max" value={formatAperture(lens.aperture_max)} />
@@ -166,6 +206,46 @@ export default function HomePage() {
             <Truck className="size-5 text-primary" />
             <BentoEyebrow>Insured delivery</BentoEyebrow>
             <p className="text-sm text-muted-foreground">GHN / Viettel Post with declared value for high-end gear.</p>
+          </BentoCard>
+
+          {/* Flagship story */}
+          <BentoCard
+            span="2x1"
+            focusable
+            className="justify-between gap-6 bg-[radial-gradient(90%_120%_at_100%_0%,#2a1a12_0%,#16161a_55%)]"
+          >
+            <div>
+              <BentoEyebrow className="flex items-center gap-2">
+                <Layers className="size-3.5 text-primary" /> Flagship story
+              </BentoEyebrow>
+              <h3 className="mt-3 text-xl font-bold tracking-tight">Inside the {featuredBody.name}</h3>
+              <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+                Scroll through an exploded view: sensor, stabiliser and image engine, layer by layer.
+              </p>
+            </div>
+            <Button variant="secondary" size="sm" className="self-start" asChild>
+              <Link href="/flagship">
+                Take it apart <ArrowUpRight />
+              </Link>
+            </Button>
+          </BentoCard>
+
+          {/* Lens Lab */}
+          <BentoCard span="2x1" focusable className="justify-between gap-6">
+            <div>
+              <BentoEyebrow className="flex items-center gap-2">
+                <SlidersHorizontal className="size-3.5 text-primary" /> Lens Lab
+              </BentoEyebrow>
+              <h3 className="mt-3 text-xl font-bold tracking-tight">f/1.4 vs f/4, side by side</h3>
+              <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+                Drag to compare background blur across apertures, or noise across ISO settings.
+              </p>
+            </div>
+            <Button variant="secondary" size="sm" className="self-start" asChild>
+              <Link href="/lens-lab">
+                Open the lab <ArrowUpRight />
+              </Link>
+            </Button>
           </BentoCard>
         </BentoGrid>
       </Container>
