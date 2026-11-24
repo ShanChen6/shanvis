@@ -4,6 +4,7 @@ import * as React from "react";
 
 import { checkAddition, checkCartCompatibility, type CompatibilityIssue } from "@/lib/cart/compatibility";
 import * as store from "@/lib/cart/store";
+import { getLenis } from "@/lib/motion/lenis";
 import type { CartItem, CartProduct } from "@/lib/cart/types";
 
 interface CartContextValue {
@@ -28,6 +29,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const items = React.useSyncExternalStore(store.subscribe, store.getSnapshot, store.getServerSnapshot);
   const [isOpen, setIsOpen] = React.useState(false);
   const [lastAdded, setLastAdded] = React.useState<CartContextValue["lastAdded"]>(null);
+
+  // Pause smooth scrolling behind the open drawer.
+  React.useEffect(() => {
+    const lenis = getLenis();
+    if (!lenis) return;
+    if (isOpen) lenis.stop();
+    else lenis.start();
+  }, [isOpen]);
 
   const value = React.useMemo<CartContextValue>(() => {
     const issues = checkCartCompatibility(items);
