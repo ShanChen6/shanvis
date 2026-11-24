@@ -52,6 +52,13 @@ src/
     rig-builder/       AI Rig Builder chat
     compare/           AI Spec Comparator
     api/rig-builder/   Streaming agent endpoint
+    checkout/          Checkout form + server actions
+    orders/[publicId]/ Order page with VietQR and live payment status
+    admin/             Admin: login, orders, inventory, new product
+    api/payments/      PayOS webhook, demo transfer simulation
+    api/orders/        Order status (polled by the order page)
+    api/shipping/      GHN address master data
+  proxy.ts             Redirects signed-out visitors away from /admin
   components/
     ui/                Base UI (button, badge, card, input, sheet, spec-chip, focus-frame)
     bento/             Bento grid layout primitives
@@ -64,6 +71,7 @@ src/
     lens-lab/          Compare slider and illustrated scenes
     ai/                Rig chat, kit card, message renderer
     compare/           Product picker, spec diff table, AI verdict
+    checkout/ orders/ admin/  Checkout, order and admin UI
   config/              Site config (name, nav)
   data/                Static showcase content for the home page
   lib/
@@ -73,11 +81,17 @@ src/
     optics/            Aperture blur and ISO noise mappings for Lens Lab
     ai/                Gemini model, rig agent + tools, comparison schema
     rate-limit.ts      In-memory per-IP rate limiter
+    store/             Orders + catalog writes: Supabase backend and in-memory demo backend
+    payments/          PayOS provider, demo provider, webhook handling
+    shipping/          GHN client, parcel/insurance rules, flat-rate fallback
+    checkout/          Checkout validation schema
+    admin/             Admin session auth, product form schema
     supabase/          Supabase clients (browser, server, public, admin)
   types/               Domain types (catalog)
 supabase/
   migrations/          SQL schema: products, camera_specs, product_embeddings
   seed.sql             Sample catalog for local development
+  tests/orders.sql     Scenario tests for the order SQL functions
 ```
 
 ## Design System
@@ -93,6 +107,7 @@ supabase/
 | `products` | Name, brand, category (`body` / `lens` / `accessory`), price (VND), stock |
 | `camera_specs` | Specs as `JSONB`; `mount_type` and `sensor_size` are derived into typed, indexed columns |
 | `sample_photos` | Sample gallery photos with EXIF (`JSONB`) |
+| `orders`, `order_items`, `order_payments` | Orders with price snapshots, stock reservations and every bank transfer received |
 | `product_embeddings` | `vector(768)` embeddings with an HNSW index, queried via `match_products()` |
 
 Row Level Security is enabled: the storefront can read active products; writes and embeddings are server-only (service role).
@@ -106,6 +121,35 @@ Row Level Security is enabled: the storefront can read active products; writes a
   - interchangeable lens with only a fixed-lens body (e.g. X100VI) → error
   - APS-C lens on a full-frame body → warning (crop mode)
   - mount-specific accessory that fits no body → warning
+
+## Checkout, Payments & Shipping
+
+1. **Checkout (`/checkout`)** — contact + delivery address. The server re-prices every line from the database, re-checks mount compatibility, quotes shipping and calls `place_order`, which **reserves stock atomically** (all lines or nothing).
+2. **Payment** — a PayOS payment link is created for the order (15-minute window, transfer note `SV<orderCode>` to fit PayOS's 9-character limit). The order page renders the **VietQR** code server-side and polls the status every 2 s.
+3. **Webhook (`/api/payments/payos/webhook`)** — the signature is verified with the official `@payos/node` SDK before anything is recorded. `record_order_payment` is idempotent per bank reference, adds up partial transfers, and flags under/over-payments or late payments without stock in `needs_attention` for the admin.
+4. **Expiry** — unpaid orders expire after the window and release their stock.
+
+| Mode | When | Behaviour |
+| :--- | :--- | :--- |
+| PayOS | `PAYOS_CLIENT_ID`, `PAYOS_API_KEY`, `PAYOS_CHECKSUM_KEY` set | Real VietQR transfers. PayOS has no sandbox: test with small amounts. Register the webhook URL in my.payos.vn. |
+| Demo | PayOS not configured, in development (or `ALLOW_DEMO_PAYMENTS=true`) | A "Simulate bank transfer" button sends a signed webhook through the same verification path. **Refused in production by default.** |
+| Disabled | Production without PayOS | Checkout shows that online payment is unavailable. |
+
+**Shipping** — with `GHN_TOKEN`/`GHN_SHOP_ID`, the address is picked from GHN's province/district/ward lists and the fee comes from GHN's fee API (standard service). Parcel weight is computed from product weights plus packaging. The declared value for insurance is the order subtotal **capped at 5,000,000 VND** (GHN's documented maximum, configurable), and the checkout says so when an order is worth more. Without GHN a flat fee is used.
+
+> GHN's developer portal blocks automated access, so endpoint/field names were cross-checked against a maintained SDK rather than the portal itself. Verify against a GHN dev account (`GHN_ENV=dev`) before going live.
+
+## Admin (`/admin`)
+
+Set `ADMIN_PASSWORD` (12+ characters) to enable. Sessions are HMAC-signed, `HttpOnly`, `SameSite=Strict` cookies scoped to `/admin` and expire after 8 hours; login attempts are rate limited. `proxy.ts` redirects signed-out visitors, and every admin page and server action checks the session again.
+
+- **Orders** — status filters, stats, orders needing attention; mark paid orders as shipped with a tracking code, cancel unpaid orders (releases stock).
+- **Inventory** — edit stock, hide/publish products, see which products have a search vector and generate missing ones.
+- **New product** — body / lens / accessory form with spec validation. Saving creates the product and its specs in one transaction and generates a 768-dim Gemini embedding into `product_embeddings` (skipped if AI is not configured).
+
+## Demo mode
+
+With no Supabase URL configured, the app runs fully in memory: the demo catalog, orders, stock and admin edits live in the server process and reset on restart. This is for local development only.
 
 ## AI
 

@@ -65,9 +65,9 @@
 * [x] Xây dựng tính năng **AI Spec Comparator**: Chọn 2 máy ảnh bất kỳ để AI tự đọc JSONB và tóm tắt ưu/nhược điểm bằng ngôn ngữ dễ hiểu cho người mới.
 
 ### Tuần 5: Thanh toán Tự động, Vận chuyển & Quản trị (Việt Nam)
-* [ ] Tích hợp cổng thanh toán **VietQR (PayOS hoặc SePay)**: Tạo mã QR động theo từng đơn hàng và tự động cập nhật trạng thái đã thanh toán qua Webhook trong 3 giây.
-* [ ] Tích hợp API **Giao Hàng Nhanh (GHN)** / **Viettel Post** để tự động tính phí ship và khai giá bảo hiểm hàng hóa.
-* [ ] Xây dựng trang Admin quản lý đơn hàng, tồn kho và form thêm sản phẩm mới (tự động tạo vector embedding mỗi khi đăng sản phẩm).
+* [x] Tích hợp cổng thanh toán **VietQR (PayOS hoặc SePay)**: Tạo mã QR động theo từng đơn hàng và tự động cập nhật trạng thái đã thanh toán qua Webhook trong 3 giây.
+* [x] Tích hợp API **Giao Hàng Nhanh (GHN)** / **Viettel Post** để tự động tính phí ship và khai giá bảo hiểm hàng hóa.
+* [x] Xây dựng trang Admin quản lý đơn hàng, tồn kho và form thêm sản phẩm mới (tự động tạo vector embedding mỗi khi đăng sản phẩm).
 
 ### Tuần 6: Tối ưu Hiệu năng & Kiểm thử Toàn diện (QA)
 * [ ] Chuyển đổi toàn bộ hình ảnh sản phẩm và ảnh mẫu sang định dạng **AVIF/WebP**, cấu hình `next/image` tối ưu tốc độ tải.
