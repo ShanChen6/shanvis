@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Aperture, Camera, Package } from "lucide-react";
 
+import { isOptimizableImage } from "@/lib/media/image-src";
 import { cn } from "@/lib/utils";
 import type { ProductCategory } from "@/types/catalog";
 
@@ -20,7 +21,8 @@ function hueOf(seed: string) {
 
 /**
  * Product image, or a tinted placeholder with the category icon when the
- * product has no photo yet.
+ * product has no photo yet (or its URL is not one next/image may optimize).
+ * Photos are served by next/image as AVIF/WebP at the width `sizes` asks for.
  */
 export function ProductMedia({
   name,
@@ -29,7 +31,8 @@ export function ProductMedia({
   seed,
   caption,
   sizes = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw",
-  priority = false,
+  preload = false,
+  quality = 75,
   className,
   iconClassName,
 }: {
@@ -39,14 +42,26 @@ export function ProductMedia({
   seed: string;
   caption?: string;
   sizes?: string;
-  priority?: boolean;
+  /** Preload the image (use for the largest image above the fold only). */
+  preload?: boolean;
+  /** Must be listed in `images.qualities` in next.config.ts. */
+  quality?: 60 | 75;
   className?: string;
   iconClassName?: string;
 }) {
-  if (image) {
+  if (isOptimizableImage(image)) {
     return (
       <div className={cn("relative overflow-hidden bg-muted", className)}>
-        <Image src={image} alt={name} fill sizes={sizes} priority={priority} className="object-cover" />
+        <Image
+          src={image}
+          alt={name}
+          fill
+          sizes={sizes}
+          quality={quality}
+          preload={preload}
+          fetchPriority={preload ? "high" : undefined}
+          className="object-cover"
+        />
       </div>
     );
   }

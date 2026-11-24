@@ -91,8 +91,8 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
               image={product.images[0]}
               seed={product.slug}
               caption={mediaCaption(product)}
-              priority
-              sizes="(min-width: 1024px) 55vw, 100vw"
+              preload
+              sizes="(min-width: 1280px) 700px, (min-width: 1024px) 55vw, 100vw"
               className="aspect-[4/3] rounded-3xl border border-border"
               iconClassName="size-24"
             />

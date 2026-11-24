@@ -104,7 +104,6 @@ export default function HomePage() {
                   seed={featuredBody.slug}
                   className="aspect-[4/3] w-full rounded-xl"
                   iconClassName="size-10"
-                  priority
                 />
               </ViewTransition>
             </Link>
