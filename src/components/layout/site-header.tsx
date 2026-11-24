@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Search, ShoppingBag } from "lucide-react";
+import { Search } from "lucide-react";
 
 import { siteConfig } from "@/config/site";
 import { Button } from "@/components/ui/button";
+import { CartButton } from "@/components/cart/cart-button";
 import { Container } from "@/components/layout/container";
 import { Logo } from "@/components/layout/logo";
 
@@ -23,12 +24,12 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" aria-label="Search">
-            <Search />
+          <Button variant="ghost" size="icon" aria-label="Search" asChild>
+            <Link href="/products">
+              <Search />
+            </Link>
           </Button>
-          <Button variant="ghost" size="icon" aria-label="Cart">
-            <ShoppingBag />
-          </Button>
+          <CartButton />
         </div>
       </Container>
     </header>
