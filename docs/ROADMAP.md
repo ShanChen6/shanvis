@@ -44,11 +44,11 @@
 * [x] Xây dựng bộ UI Components cơ bản theo phong cách Bento Grid & Dark Mode.
 
 ### Tuần 2: Core E-commerce & Bộ lọc Quang học Chuyên sâu
-* [ ] Xây dựng trang danh sách sản phẩm với bộ lọc kỹ thuật: Hãng sản xuất, Ngàm ống kính (E-mount, RF, X-mount, Z-mount), Kích thước cảm biến (Full-frame, APS-C, Medium Format), Tiêu cự & Khẩu độ.
-* [ ] Xây dựng trang chi tiết sản phẩm (PDP):
+* [x] Xây dựng trang danh sách sản phẩm với bộ lọc kỹ thuật: Hãng sản xuất, Ngàm ống kính (E-mount, RF, X-mount, Z-mount), Kích thước cảm biến (Full-frame, APS-C, Medium Format), Tiêu cự & Khẩu độ.
+* [x] Xây dựng trang chi tiết sản phẩm (PDP):
   * Bảng thông số kỹ thuật trực quan.
   * Thư viện ảnh chụp mẫu (**Sample Gallery**) hiển thị kèm thẻ thông số EXIF (máy ảnh, ống kính, tiêu cự, khẩu độ, tốc độ màn trập, ISO).
-* [ ] Xây dựng **Smart Cart Drawer** (Giỏ hàng thông minh): Tự động kiểm tra tính tương thích ngàm giữa Body và Lens khi thêm vào giỏ, cảnh báo nếu chọn sai ngàm.
+* [x] Xây dựng **Smart Cart Drawer** (Giỏ hàng thông minh): Tự động kiểm tra tính tương thích ngàm giữa Body và Lens khi thêm vào giỏ, cảnh báo nếu chọn sai ngàm.
 
 ### Tuần 3: Tích hợp Chuyển động Nhiếp ảnh (Camera Motion UX)
 * [ ] Tích hợp **Lenis** cho trải nghiệm cuộn trang có quán tính vật lý mượt mà.
