@@ -5,7 +5,9 @@ import { cacheLife, cacheTag } from "next/cache";
 import { createPublicClient } from "@/lib/supabase/public";
 import type { CameraSpecs, ProductWithSpecs, SamplePhoto } from "@/types/catalog";
 
-import { demoProducts, demoSamplePhotos } from "./demo-data";
+import { getStore } from "@/lib/store";
+
+import { demoSamplePhotos } from "./demo-data";
 
 export const CATALOG_TAG = "catalog";
 
@@ -20,7 +22,10 @@ export async function getCatalog(): Promise<ProductWithSpecs[]> {
   cacheTag(CATALOG_TAG);
 
   const supabase = createPublicClient();
-  if (!supabase) return demoProducts;
+  if (!supabase) {
+    // Demo mode: the in-memory store holds the demo catalog and its live stock.
+    return (await getStore().listAllProducts()).filter((p) => p.is_active);
+  }
 
   const { data, error } = await supabase
     .from("products")
