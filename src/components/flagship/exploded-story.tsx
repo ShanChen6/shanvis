@@ -115,7 +115,8 @@ export function ExplodedStory({ chapters }: { chapters: StoryChapter[] }) {
               i === 0 && "lg:min-h-[calc(100dvh-4rem)]",
             )}
           >
-            <article className="w-full rounded-3xl border border-border bg-background/85 p-6 backdrop-blur-md sm:p-8 lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
+            {/* No backdrop blur over the animating 3D camera: on phones it would be re-blurred every scroll frame. */}
+            <article className="w-full rounded-3xl border border-border bg-background/95 p-6 sm:p-8 lg:border-0 lg:bg-transparent lg:p-0">
               <p className="spec-figure text-[11px] uppercase tracking-[0.2em] text-primary">
                 {String(i + 1).padStart(2, "0")} — {chapter.eyebrow}
               </p>

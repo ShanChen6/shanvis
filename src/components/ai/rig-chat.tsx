@@ -7,6 +7,7 @@ import { ArrowUp, Loader2, RotateCcw, Search, Sparkles, Square, XCircle } from "
 
 import type { RigProposal } from "@/lib/ai/rig";
 import type { RigAgentUIMessage } from "@/lib/ai/rig-agent";
+import { usePrefersReducedMotion } from "@/lib/motion/use-prefers-reduced-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -94,9 +95,12 @@ export function RigChat({ configured }: { configured: boolean }) {
   const busy = status === "submitted" || status === "streaming";
   const endRef = React.useRef<HTMLDivElement>(null);
 
+  const reducedMotion = usePrefersReducedMotion();
+
   React.useEffect(() => {
-    endRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
-  }, [messages, status]);
+    // JS smooth scrolling ignores the CSS reduced-motion override, so check here.
+    endRef.current?.scrollIntoView({ block: "end", behavior: reducedMotion ? "auto" : "smooth" });
+  }, [messages, status, reducedMotion]);
 
   const send = (text: string) => {
     const trimmed = text.trim();

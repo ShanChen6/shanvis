@@ -10,6 +10,10 @@ import { useCanHover, usePrefersReducedMotion } from "@/lib/motion/use-prefers-r
  * EVF "focus pull": hovering one item in the group racks focus onto it.
  * The other items soften (blur + dim), and the hovered one shows AF corners
  * locking on plus a quick-spec readout, like an electronic viewfinder.
+ *
+ * Only `transform` and `opacity` are animated, so every frame is composited
+ * on the GPU. The blur is a veil with a fixed backdrop blur that fades in,
+ * instead of animating `filter` (which re-rasterizes the card every frame).
  */
 
 interface FocusPullContextValue {
@@ -70,13 +74,25 @@ export function FocusPullItem({
       }}
       initial={false}
       animate={{
-        filter: isDefocused ? "blur(3px)" : "blur(0px)",
-        opacity: isDefocused ? 0.45 : 1,
+        opacity: isDefocused ? 0.55 : 1,
         scale: isDefocused ? 0.985 : 1,
       }}
       transition={{ duration: reduced ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
+      <AnimatePresence>
+        {isDefocused && (
+          <motion.div
+            key="defocus"
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-10 rounded-2xl bg-background/25 backdrop-blur-[3px]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          />
+        )}
+      </AnimatePresence>
       <AnimatePresence>
         {isActive && (
           <motion.div

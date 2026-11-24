@@ -145,10 +145,18 @@
   animation-name: focus-rack;
 }
 
-/* Mid-flight blur reads like a lens racking focus and hides scaling artifacts. */
+/* Mid-flight blur reads like a lens racking focus and hides scaling artifacts.
+   The snapshots are GPU layers, so this filter animation runs on the compositor. */
 @keyframes focus-rack {
   35% {
     filter: blur(4px);
+  }
+}
+
+/* Touch devices (usually phones): keep the morph to transform + opacity only. */
+@media (hover: none) {
+  ::view-transition-image-pair(.morph) {
+    animation-name: none;
   }
 }
 
