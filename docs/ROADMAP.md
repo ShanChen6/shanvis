@@ -36,12 +36,12 @@
 ## 3. Kế Hoạch Triển Khai Chi Tiết 6 Tuần
 
 ### Tuần 1: Kiến trúc Dữ liệu & Thiết kế Hệ thống (Design System)
-* [ ] Khởi tạo dự án Next.js với TypeScript, Tailwind CSS và cấu hình thư mục chuẩn.
-* [ ] Thiết kế Database trên Supabase:
+* [x] Khởi tạo dự án Next.js với TypeScript, Tailwind CSS và cấu hình thư mục chuẩn.
+* [x] Thiết kế Database trên Supabase:
   * Bảng `products`: Tên, hãng (Sony, Canon, Fujifilm, Nikon...), giá, tồn kho, phân loại (`body`, `lens`, `accessory`).
   * Bảng `camera_specs`: Lưu thông số dạng `JSONB` (ngàm `mount_type`, cảm biến `sensor_size`, dải ISO, chống rung IBIS).
   * Bảng `product_embeddings`: Kích hoạt `pgvector` để lưu vector phục vụ AI tìm kiếm theo ngữ cảnh.
-* [ ] Xây dựng bộ UI Components cơ bản theo phong cách Bento Grid & Dark Mode.
+* [x] Xây dựng bộ UI Components cơ bản theo phong cách Bento Grid & Dark Mode.
 
 ### Tuần 2: Core E-commerce & Bộ lọc Quang học Chuyên sâu
 * [ ] Xây dựng trang danh sách sản phẩm với bộ lọc kỹ thuật: Hãng sản xuất, Ngàm ống kính (E-mount, RF, X-mount, Z-mount), Kích thước cảm biến (Full-frame, APS-C, Medium Format), Tiêu cự & Khẩu độ.
