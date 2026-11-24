@@ -42,6 +42,8 @@ export interface BodySpecs {
   /** Stops of in-body stabilisation; null when the body has no IBIS. */
   ibis_stops: number | null;
   video_max: string;
+  /** Set for fixed-lens cameras (e.g. X100VI), which accept no interchangeable lenses. */
+  fixed_lens?: string;
   weight_g: number;
 }
 
@@ -85,4 +87,24 @@ export interface Product {
 
 export interface ProductWithSpecs extends Product {
   specs: CameraSpecs | null;
+}
+
+export interface Exif {
+  camera: string;
+  lens: string;
+  focal_length_mm: number;
+  aperture: number;
+  /** Shutter speed as shown on camera, e.g. "1/250" or "2" (seconds). */
+  shutter: string;
+  iso: number;
+}
+
+export interface SamplePhoto {
+  id: string;
+  product_id: string;
+  /** null only in offline demo data, where a placeholder frame is rendered. */
+  image_url: string | null;
+  alt: string;
+  exif: Exif;
+  sort_order: number;
 }

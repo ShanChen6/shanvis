@@ -36,3 +36,5 @@ from (values
   ('sony-np-fz100',        '{"kind":"accessory","compatible_mounts":["sony-e"],"type":"battery","capacity_mah":2280}')
 ) as v(slug, specs)
 join public.products p on p.slug = v.slug;
+
+-- Sample photos are uploaded through the admin (week 5); none are seeded.
