@@ -7,6 +7,7 @@ export const siteConfig = {
     { label: "Bodies", href: "/products?category=body" },
     { label: "Lenses", href: "/products?category=lens" },
     { label: "Accessories", href: "/products?category=accessory" },
+    { label: "Lens Lab", href: "/lens-lab" },
     { label: "AI Rig Builder", href: "/rig-builder" },
   ],
 } as const;
