@@ -38,3 +38,25 @@ export function stockLabel(stock: number): { label: string; variant: "success" |
   if (stock <= 3) return { label: `Only ${stock} left`, variant: "warning" };
   return { label: "In stock", variant: "success" };
 }
+
+/** EVF-style readout for the focus-pull overlay. */
+export function evfReadout(p: ProductWithSpecs): [string, string][] {
+  const s = p.specs;
+  if (s?.kind === "body") {
+    return [
+      ["ISO", `${s.iso_min}-${s.iso_max.toLocaleString("en-US")}`],
+      ["MP", String(s.megapixels)],
+      ["IBIS", s.ibis_stops ? `${s.ibis_stops}` : "—"],
+      ["", s.video_max],
+    ];
+  }
+  if (s?.kind === "lens") {
+    return [
+      ["", formatFocalLength(s)],
+      ["", formatAperture(s.aperture_max)],
+      ["", `${s.weight_g}g`],
+      ["", s.focal_min_mm === s.focal_max_mm ? "PRIME" : "ZOOM"],
+    ];
+  }
+  return [];
+}

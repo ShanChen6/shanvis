@@ -132,3 +132,30 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/* View transitions: product image morphs from card/thumbnail into the PDP.   */
+/* -------------------------------------------------------------------------- */
+::view-transition-group(.morph) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-image-pair(.morph) {
+  animation-name: focus-rack;
+}
+
+/* Mid-flight blur reads like a lens racking focus and hides scaling artifacts. */
+@keyframes focus-rack {
+  35% {
+    filter: blur(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

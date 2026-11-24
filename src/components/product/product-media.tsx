@@ -6,6 +6,11 @@ import type { ProductCategory } from "@/types/catalog";
 
 const ICONS = { body: Camera, lens: Aperture, accessory: Package } satisfies Record<ProductCategory, unknown>;
 
+/** Shared view-transition name, so a product's image morphs between pages. */
+export function productMediaTransitionName(slug: string) {
+  return `product-media-${slug}`;
+}
+
 /** Deterministic hue from a string, so each product gets a stable tint. */
 function hueOf(seed: string) {
   let h = 0;

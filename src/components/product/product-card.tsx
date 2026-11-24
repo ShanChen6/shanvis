@@ -1,3 +1,4 @@
+import { ViewTransition } from "react";
 import Link from "next/link";
 
 import { brandLabel } from "@/lib/catalog/filters";
@@ -8,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { FocusFrame } from "@/components/ui/focus-frame";
 import { SpecChip } from "@/components/ui/spec-chip";
 
-import { ProductMedia } from "./product-media";
+import { ProductMedia, productMediaTransitionName } from "./product-media";
 
 export function ProductCard({ product, className }: { product: ProductWithSpecs; className?: string }) {
   const stock = stockLabel(product.stock);
@@ -21,15 +22,18 @@ export function ProductCard({ product, className }: { product: ProductWithSpecs;
       )}
     >
       <div className="relative">
-        <ProductMedia
-          name={product.name}
-          category={product.category}
-          image={product.images[0]}
-          seed={product.slug}
-          caption={mediaCaption(product)}
-          className="aspect-[4/3]"
-        />
-        <FocusFrame className="opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100" />
+        <ViewTransition name={productMediaTransitionName(product.slug)} share="morph" default="none">
+          <ProductMedia
+            name={product.name}
+            category={product.category}
+            image={product.images[0]}
+            seed={product.slug}
+            caption={mediaCaption(product)}
+            className="aspect-[4/3]"
+          />
+        </ViewTransition>
+        {/* Keyboard focus ring in EVF style; hover is handled by the focus-pull group. */}
+        <FocusFrame className="opacity-0 transition-opacity duration-300 group-focus-visible:opacity-100" />
       </div>
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div className="flex items-start justify-between gap-3">

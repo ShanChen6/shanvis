@@ -1,10 +1,11 @@
+import { ViewTransition } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight, ShieldCheck, Truck } from "lucide-react";
 
 import { brandLabel } from "@/lib/catalog/filters";
-import { keySpecs, mediaCaption, stockLabel } from "@/lib/catalog/present";
+import { evfReadout, keySpecs, mediaCaption, stockLabel } from "@/lib/catalog/present";
 import { compatibleProducts } from "@/lib/catalog/related";
 import { getCatalog, getProductBySlug, getSamplePhotos } from "@/lib/catalog/source";
 import { toCartProduct } from "@/lib/cart/types";
@@ -12,8 +13,9 @@ import { formatVnd } from "@/lib/utils";
 import { MOUNT_LABELS, type ProductWithSpecs } from "@/types/catalog";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { Container } from "@/components/layout/container";
+import { FocusPullGroup, FocusPullItem } from "@/components/motion/focus-pull";
 import { ProductCard } from "@/components/product/product-card";
-import { ProductMedia } from "@/components/product/product-media";
+import { ProductMedia, productMediaTransitionName } from "@/components/product/product-media";
 import { SampleGallery } from "@/components/product/sample-gallery";
 import { SpecTable } from "@/components/product/spec-table";
 import { Badge } from "@/components/ui/badge";
@@ -81,17 +83,19 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
 
       <div className="grid gap-8 lg:grid-cols-[1.15fr_1fr] lg:gap-12">
         <div className="relative">
-          <ProductMedia
-            name={product.name}
-            category={product.category}
-            image={product.images[0]}
-            seed={product.slug}
-            caption={mediaCaption(product)}
-            priority
-            sizes="(min-width: 1024px) 55vw, 100vw"
-            className="aspect-[4/3] rounded-3xl border border-border"
-            iconClassName="size-24"
-          />
+          <ViewTransition name={productMediaTransitionName(product.slug)} share="morph" default="none">
+            <ProductMedia
+              name={product.name}
+              category={product.category}
+              image={product.images[0]}
+              seed={product.slug}
+              caption={mediaCaption(product)}
+              priority
+              sizes="(min-width: 1024px) 55vw, 100vw"
+              className="aspect-[4/3] rounded-3xl border border-border"
+              iconClassName="size-24"
+            />
+          </ViewTransition>
           <FocusFrame inset={16} size={24} />
         </div>
 
@@ -153,13 +157,13 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
       {related.length > 0 && (
         <section className="mt-16" aria-labelledby="related-heading">
           <h2 id="related-heading" className="mb-4 text-xl font-bold tracking-tight">{relatedTitle}</h2>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <FocusPullGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((p) => (
-              <li key={p.id} className="flex">
+              <FocusPullItem key={p.id} id={p.id} readout={evfReadout(p)} className="flex">
                 <ProductCard product={p} className="w-full" />
-              </li>
+              </FocusPullItem>
             ))}
-          </ul>
+          </FocusPullGroup>
         </section>
       )}
     </Container>

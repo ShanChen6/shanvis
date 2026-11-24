@@ -4,12 +4,14 @@ import { Suspense } from "react";
 import { SlidersHorizontal } from "lucide-react";
 
 import { activeFilterCount, buildFacets, clearFilters, filterProducts, filtersHref, parseFilters } from "@/lib/catalog/filters";
+import { evfReadout } from "@/lib/catalog/present";
 import { getCatalog } from "@/lib/catalog/source";
 import { ActiveFilters } from "@/components/catalog/active-filters";
 import { FilterPanel } from "@/components/catalog/filter-panel";
 import { SearchForm } from "@/components/catalog/search-form";
 import { SortLinks } from "@/components/catalog/sort-links";
 import { Container } from "@/components/layout/container";
+import { FocusPullGroup, FocusPullItem } from "@/components/motion/focus-pull";
 import { ProductCard } from "@/components/product/product-card";
 import { Button } from "@/components/ui/button";
 
@@ -77,13 +79,13 @@ async function Catalog({ searchParams }: Pick<PageProps<"/products">, "searchPar
         <ActiveFilters filters={filters} />
 
         {products.length > 0 ? (
-          <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <FocusPullGroup className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {products.map((product) => (
-              <li key={product.id} className="flex">
+              <FocusPullItem key={product.id} id={product.id} readout={evfReadout(product)} className="flex">
                 <ProductCard product={product} className="w-full" />
-              </li>
+              </FocusPullItem>
             ))}
-          </ul>
+          </FocusPullGroup>
         ) : (
           <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-border-strong px-6 py-16 text-center">
             <p className="font-medium">Nothing in frame.</p>
