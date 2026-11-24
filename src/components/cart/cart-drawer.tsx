@@ -17,7 +17,8 @@ import { CompatibilityNotice } from "./compatibility-notice";
 export function CartDrawer() {
   const { items, count, subtotal, issues, lastAdded, isOpen, setOpen, setQuantity, remove } = useCart();
   const hasErrors = issues.some((i) => i.level === "error");
-  const justAdded = lastAdded && items.some((i) => i.productId === lastAdded.product.productId) ? lastAdded : null;
+  const justAdded =
+    lastAdded && lastAdded.products.some((p) => items.some((i) => i.productId === p.productId)) ? lastAdded : null;
 
   return (
     <Sheet open={isOpen} onOpenChange={setOpen}>
@@ -28,7 +29,10 @@ export function CartDrawer() {
           </SheetTitle>
           {justAdded && (
             <SheetDescription>
-              Added <span className="text-foreground">{justAdded.product.name}</span>
+              Added{" "}
+              <span className="text-foreground">
+                {justAdded.products.length === 1 ? justAdded.products[0].name : `${justAdded.products.length} items`}
+              </span>
             </SheetDescription>
           )}
         </SheetHeader>

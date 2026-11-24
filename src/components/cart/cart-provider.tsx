@@ -13,11 +13,13 @@ interface CartContextValue {
   subtotal: number;
   /** All compatibility issues in the current cart. */
   issues: CompatibilityIssue[];
-  /** The most recently added product and the issues it caused, if any. */
-  lastAdded: { product: CartProduct; issues: CompatibilityIssue[] } | null;
+  /** The most recently added product(s) and the issues they caused, if any. */
+  lastAdded: { products: CartProduct[]; issues: CompatibilityIssue[] } | null;
   isOpen: boolean;
   setOpen: (open: boolean) => void;
   add: (product: CartProduct, quantity?: number) => void;
+  /** Add several products at once (e.g. an AI-built kit). */
+  addMany: (products: CartProduct[]) => void;
   setQuantity: (productId: string, quantity: number) => void;
   remove: (productId: string) => void;
   clear: () => void;
@@ -54,7 +56,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       add: (product, quantity = 1) => {
         const addIssues = checkAddition(store.getSnapshot(), product);
         store.addItem(product, quantity);
-        setLastAdded({ product, issues: addIssues });
+        setLastAdded({ products: [product], issues: addIssues });
+        setIsOpen(true);
+      },
+      addMany: (products) => {
+        const seen = new Set<string>();
+        const addIssues: CompatibilityIssue[] = [];
+        for (const product of products) {
+          for (const issue of checkAddition(store.getSnapshot(), product)) {
+            const key = `${issue.code}:${issue.productId}`;
+            if (seen.has(key)) continue;
+            seen.add(key);
+            addIssues.push(issue);
+          }
+          store.addItem(product, 1);
+        }
+        setLastAdded({ products, issues: addIssues });
         setIsOpen(true);
       },
       setQuantity: store.setQuantity,
