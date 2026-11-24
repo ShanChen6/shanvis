@@ -105,8 +105,10 @@ export default function HomePage() {
             </div>
             <div className="mt-auto flex items-center justify-between">
               <span className="spec-figure text-lg font-semibold">{formatVnd(featuredBody.price)}</span>
-              <Button size="sm" variant="outline">
-                Details <ArrowUpRight />
+              <Button size="sm" variant="outline" asChild>
+                <Link href={`/products/${featuredBody.slug}`}>
+                  Details <ArrowUpRight />
+                </Link>
               </Button>
             </div>
           </BentoCard>
