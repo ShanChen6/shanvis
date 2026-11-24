@@ -2,7 +2,7 @@ import { ViewTransition } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, ShieldCheck, Truck } from "lucide-react";
+import { ChevronRight, GitCompareArrows, ShieldCheck, Truck } from "lucide-react";
 
 import { brandLabel } from "@/lib/catalog/filters";
 import { evfReadout, keySpecs, mediaCaption, stockLabel } from "@/lib/catalog/present";
@@ -19,6 +19,7 @@ import { ProductMedia, productMediaTransitionName } from "@/components/product/p
 import { SampleGallery } from "@/components/product/sample-gallery";
 import { SpecTable } from "@/components/product/spec-table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { FocusFrame } from "@/components/ui/focus-frame";
 import { SpecChip } from "@/components/ui/spec-chip";
 
@@ -126,7 +127,16 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
             </p>
           )}
 
-          <AddToCartButton product={toCartProduct(product)} className="w-full sm:w-auto sm:self-start" />
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <AddToCartButton product={toCartProduct(product)} className="w-full sm:w-auto" />
+            {product.category !== "accessory" && (
+              <Button size="lg" variant="secondary" asChild>
+                <Link href={`/compare?a=${product.slug}`}>
+                  <GitCompareArrows /> Compare
+                </Link>
+              </Button>
+            )}
+          </div>
 
           <ul className="grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
             <li className="flex items-center gap-2">

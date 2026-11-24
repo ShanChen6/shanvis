@@ -6,7 +6,7 @@ type Row = [label: string, value: string];
 
 const KNOWN_ACCESSORY_KEYS = new Set(["kind", "compatible_mounts"]);
 
-function rowsFor(p: ProductWithSpecs): Row[] {
+export function specRows(p: ProductWithSpecs): Row[] {
   const s = p.specs;
   const rows: Row[] = [["Brand", brandLabel(p.brand)]];
   if (!s) return rows;
@@ -52,7 +52,7 @@ function rowsFor(p: ProductWithSpecs): Row[] {
 export function SpecTable({ product }: { product: ProductWithSpecs }) {
   return (
     <dl className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
-      {rowsFor(product).map(([label, value]) => (
+      {specRows(product).map(([label, value]) => (
         <div key={label} className="grid grid-cols-[minmax(8rem,40%)_1fr] gap-4 px-5 py-3 text-sm">
           <dt className="text-muted-foreground">{label}</dt>
           <dd className="spec-figure">{value}</dd>
