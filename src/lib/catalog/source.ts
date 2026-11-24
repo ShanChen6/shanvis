@@ -18,7 +18,9 @@ export const CATALOG_TAG = "catalog";
  */
 export async function getCatalog(): Promise<ProductWithSpecs[]> {
   "use cache";
-  cacheLife("hours");
+  // Stock changes often; orders always re-check stock in the database, so this
+  // only bounds how stale the displayed stock can be.
+  cacheLife("minutes");
   cacheTag(CATALOG_TAG);
 
   const supabase = createPublicClient();
@@ -43,7 +45,34 @@ export async function getCatalog(): Promise<ProductWithSpecs[]> {
 
 export async function getProductBySlug(slug: string) {
   const catalog = await getCatalog();
-  return catalog.find((p) => p.slug === slug) ?? null;
+  return catalog.find((p) => p.slug === slug) ?? (await lookupProductBySlug(slug));
+}
+
+/**
+ * Fallback for slugs missing from the cached catalog, e.g. a product created
+ * moments ago while the catalog entry is still being revalidated. Keyed per
+ * slug with a very short life, so a brand-new slug is always looked up fresh.
+ */
+async function lookupProductBySlug(slug: string): Promise<ProductWithSpecs | null> {
+  "use cache";
+  cacheLife("seconds");
+  cacheTag(CATALOG_TAG);
+
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) return null;
+  const supabase = createPublicClient();
+  if (!supabase) {
+    return (await getStore().listAllProducts()).find((p) => p.slug === slug && p.is_active) ?? null;
+  }
+  const { data, error } = await supabase
+    .from("products")
+    .select("*, camera_specs(specs)")
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .maybeSingle();
+  if (error) throw new Error(`Failed to load product: ${error.message}`);
+  if (!data) return null;
+  const { camera_specs, ...product } = data;
+  return { ...product, specs: (camera_specs as { specs: CameraSpecs } | null)?.specs ?? null } as ProductWithSpecs;
 }
 
 export async function getSamplePhotos(productId: string): Promise<SamplePhoto[]> {

@@ -1,3 +1,6 @@
+import { revalidateTag } from "next/cache";
+
+import { CATALOG_TAG } from "@/lib/catalog/source";
 import { getStore } from "@/lib/store";
 
 /** Payment status for the order page to poll. Public ids are unguessable. */
@@ -6,7 +9,7 @@ export async function GET(_request: Request, { params }: RouteContext<"/api/orde
   if (!/^[0-9a-f]{32}$/.test(publicId)) return Response.json({ error: "Not found." }, { status: 404 });
 
   const store = getStore();
-  await store.expireStaleOrders();
+  if ((await store.expireStaleOrders()) > 0) revalidateTag(CATALOG_TAG, "max"); // stock was released
   const order = await store.getOrderByPublicId(publicId);
   if (!order) return Response.json({ error: "Not found." }, { status: 404 });
 
