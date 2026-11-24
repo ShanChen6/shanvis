@@ -47,6 +47,8 @@ src/
   app/
     products/          Catalog listing with filters (/products)
     products/[slug]/   Product detail page
+    flagship/          Scrollytelling exploded view of the flagship body
+    lens-lab/          Aperture / ISO comparison sliders
   components/
     ui/                Base UI (button, badge, card, input, sheet, spec-chip, focus-frame)
     bento/             Bento grid layout primitives
@@ -54,11 +56,16 @@ src/
     catalog/           Filter panel, active filters, sort, search
     product/           Product card, media, spec table, sample gallery
     cart/              Cart provider, drawer, add-to-cart, compatibility notices
+    motion/            Smooth scroll (Lenis) and EVF focus-pull grid
+    flagship/          Layered camera illustration and scroll-driven story
+    lens-lab/          Compare slider and illustrated scenes
   config/              Site config (name, nav)
   data/                Static showcase content for the home page
   lib/
     catalog/           Data source (Supabase + demo fallback), filters, related products
     cart/              Cart store (localStorage) and mount compatibility rules
+    motion/            Reduced-motion / hover hooks, Lenis handle
+    optics/            Aperture blur and ISO noise mappings for Lens Lab
     supabase/          Supabase clients (browser, server, public, admin)
   types/               Domain types (catalog)
 supabase/
@@ -92,6 +99,18 @@ Row Level Security is enabled: the storefront can read active products; writes a
   - interchangeable lens with only a fixed-lens body (e.g. X100VI) → error
   - APS-C lens on a full-frame body → warning (crop mode)
   - mount-specific accessory that fits no body → warning
+
+## Motion
+
+| Effect | Where | Tech |
+| :--- | :--- | :--- |
+| Inertial smooth scroll | Whole site | Lenis, driven by GSAP's ticker so ScrollTrigger stays in sync |
+| EVF focus pull | Product grids | Motion: other cards blur/dim, AF corners lock on, quick-spec readout |
+| Shared element transition | Card / home thumbnail → product page | React `<ViewTransition>` (`share="morph"`) with a focus-rack blur |
+| Scrollytelling | `/flagship` | GSAP ScrollTrigger scrubbing an exploded, layered SVG camera |
+| Compare slider | `/lens-lab` | Aperture (background blur) and ISO (noise) before/after |
+
+Animations only use `transform`, `opacity` and `filter`. With `prefers-reduced-motion: reduce`, Lenis, the focus-pull blur and view-transition animations are off, and the flagship page shows a static exploded view. On touch devices the focus pull is disabled.
 
 ## Branching
 

@@ -51,11 +51,11 @@
 * [x] Xây dựng **Smart Cart Drawer** (Giỏ hàng thông minh): Tự động kiểm tra tính tương thích ngàm giữa Body và Lens khi thêm vào giỏ, cảnh báo nếu chọn sai ngàm.
 
 ### Tuần 3: Tích hợp Chuyển động Nhiếp ảnh (Camera Motion UX)
-* [ ] Tích hợp **Lenis** cho trải nghiệm cuộn trang có quán tính vật lý mượt mà.
-* [ ] Xây dựng hiệu ứng **EVF Focus Pull** trên thẻ sản phẩm (Framer Motion): Làm mờ nhẹ các thẻ xung quanh khi di chuột vào 1 sản phẩm, hiện khung ngắm điện tử 4 góc và thông số nhanh.
-* [ ] Tạo hiệu ứng chuyển cảnh liền mạch (**Shared Element Transition**) từ ảnh ngoài trang chủ phóng to vào trang chi tiết.
-* [ ] Xây dựng trang **Scrollytelling Flagship** (GSAP ScrollTrigger): Khi người dùng cuộn chuột, hình ảnh máy ảnh chủ lực xoay góc hoặc hiển thị các lớp công nghệ (cảm biến, chip xử lý).
-* [ ] Tạo thanh trượt **Interactive Lens Slider**: Kéo thanh trượt để so sánh trực tiếp độ xóa phông của các khẩu độ (f/1.4 vs f/4) hoặc khử nhiễu ở mức ISO cao.
+* [x] Tích hợp **Lenis** cho trải nghiệm cuộn trang có quán tính vật lý mượt mà.
+* [x] Xây dựng hiệu ứng **EVF Focus Pull** trên thẻ sản phẩm (Framer Motion): Làm mờ nhẹ các thẻ xung quanh khi di chuột vào 1 sản phẩm, hiện khung ngắm điện tử 4 góc và thông số nhanh.
+* [x] Tạo hiệu ứng chuyển cảnh liền mạch (**Shared Element Transition**) từ ảnh ngoài trang chủ phóng to vào trang chi tiết.
+* [x] Xây dựng trang **Scrollytelling Flagship** (GSAP ScrollTrigger): Khi người dùng cuộn chuột, hình ảnh máy ảnh chủ lực xoay góc hoặc hiển thị các lớp công nghệ (cảm biến, chip xử lý).
+* [x] Tạo thanh trượt **Interactive Lens Slider**: Kéo thanh trượt để so sánh trực tiếp độ xóa phông của các khẩu độ (f/1.4 vs f/4) hoặc khử nhiễu ở mức ISO cao.
 
 ### Tuần 4: Tích hợp Trợ lý AI (AI Rig Builder)
 * [ ] Kết nối **Vercel AI SDK** với **Gemini API**.
