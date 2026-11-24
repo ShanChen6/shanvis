@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
+import { Suspense } from "react";
 
 import { isAiConfigured } from "@/lib/ai/model";
 import { RigChat } from "@/components/ai/rig-chat";
@@ -20,7 +22,15 @@ export default function RigBuilderPage() {
           your budget before it reaches you.
         </p>
       </header>
-      <RigChat configured={isAiConfigured()} />
+      <Suspense fallback={<div className="h-72 animate-pulse rounded-3xl bg-card" />}>
+        <RigChatWhenConfigured />
+      </Suspense>
     </Container>
   );
+}
+
+/** The Gemini key is runtime config: check it per request, not at build time. */
+async function RigChatWhenConfigured() {
+  await connection();
+  return <RigChat configured={isAiConfigured()} />;
 }
