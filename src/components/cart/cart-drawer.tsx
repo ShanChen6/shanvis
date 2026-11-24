@@ -156,9 +156,17 @@ export function CartDrawer() {
             {hasErrors && (
               <p className="text-xs text-destructive">Resolve the mount conflicts above before checkout.</p>
             )}
-            <Button size="lg" disabled title="Checkout arrives in week 5">
-              Checkout · coming soon
-            </Button>
+            {hasErrors ? (
+              <Button size="lg" disabled>
+                Checkout
+              </Button>
+            ) : (
+              <Button size="lg" asChild>
+                <Link href="/checkout" onClick={() => setOpen(false)}>
+                  Checkout
+                </Link>
+              </Button>
+            )}
           </SheetFooter>
         )}
       </SheetContent>
