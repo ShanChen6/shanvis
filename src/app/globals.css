@@ -1,0 +1,134 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/*
+ * SHANVIS design tokens — dark mode first.
+ * Base:   #0D0D0F  matte magnesium-alloy black, keeps sample photos colour-neutral
+ * Card:   #16161A  bento surface with a hairline rgba(255,255,255,0.08) border
+ * Accent: #FF4D00  lens-mount / EVF focus-point orange-red
+ */
+:root {
+  --radius: 1rem;
+
+  --background: #0d0d0f;
+  --foreground: #f2f2f3;
+
+  --card: #16161a;
+  --card-foreground: #f2f2f3;
+  --popover: #16161a;
+  --popover-foreground: #f2f2f3;
+
+  --primary: #ff4d00;
+  --primary-foreground: #0d0d0f;
+
+  --secondary: #1f1f25;
+  --secondary-foreground: #f2f2f3;
+
+  --muted: #1c1c21;
+  --muted-foreground: #8e8e98;
+
+  --accent: #222229;
+  --accent-foreground: #f2f2f3;
+
+  --destructive: #ff3b47;
+  --success: #2fd27a;
+  --warning: #ffb020;
+
+  --border: rgb(255 255 255 / 0.08);
+  --border-strong: rgb(255 255 255 / 0.16);
+  --input: rgb(255 255 255 / 0.12);
+  --ring: #ff4d00;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-jakarta);
+  --font-mono: var(--font-jetbrains-mono);
+
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
+  --animate-focus-blink: focus-blink 1.6s ease-in-out infinite;
+
+  @keyframes focus-blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  ::selection {
+    background: rgb(255 77 0 / 0.35);
+    color: var(--foreground);
+  }
+}
+
+@layer utilities {
+  /* Tabular mono figures for ISO, aperture, focal length, prices. */
+  .spec-figure {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  /* Faint grid, like an EVF framing overlay. */
+  .bg-evf-grid {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+    background-size: 33.333% 33.333%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
