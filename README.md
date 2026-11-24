@@ -36,7 +36,8 @@ Open http://localhost:3000.
 | `npm run build` | Production build |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript check |
-| `npm test` | Unit tests (Vitest) |
+| `npm test` | Unit and integration tests (Vitest) |
+| `npm run images:optimize -- <dir>` | Convert photos to AVIF + WebP masters (see [Images](#images)) |
 | `npm run db:reset` | Re-apply Supabase migrations and seed |
 | `npm run db:types` | Generate DB types into `src/types/database.ts` |
 
@@ -80,6 +81,7 @@ src/
     motion/            Reduced-motion / hover hooks, Lenis handle
     optics/            Aperture blur and ISO noise mappings for Lens Lab
     ai/                Gemini model, rig agent + tools, comparison schema
+    media/             Which image URLs next/image may optimize
     rate-limit.ts      In-memory per-IP rate limiter
     store/             Orders + catalog writes: Supabase backend and in-memory demo backend
     payments/          PayOS provider, demo provider, webhook handling
@@ -88,6 +90,8 @@ src/
     admin/             Admin session auth, product form schema
     supabase/          Supabase clients (browser, server, public, admin)
   types/               Domain types (catalog)
+scripts/
+  optimize-images.mjs  Convert product / sample photos to AVIF + WebP masters
 supabase/
   migrations/          SQL schema: products, camera_specs, product_embeddings
   seed.sql             Sample catalog for local development
@@ -176,7 +180,46 @@ Kit cards (with **Add the whole kit to cart**) are rendered only from `proposeRi
 | Scrollytelling | `/flagship` | GSAP ScrollTrigger scrubbing an exploded, layered SVG camera |
 | Compare slider | `/lens-lab` | Aperture (background blur) and ISO (noise) before/after |
 
-Animations only use `transform`, `opacity` and `filter`. With `prefers-reduced-motion: reduce`, Lenis, the focus-pull blur and view-transition animations are off, and the flagship page shows a static exploded view. On touch devices the focus pull is disabled.
+Animations run on the GPU: scroll-driven and hover motion only changes `transform` and `opacity`.
+
+- **Focus pull** fades in a veil with a fixed `backdrop-filter` blur instead of animating `filter` on each card.
+- **Compare slider** moves two composited layers with `translateX` instead of re-clipping (and re-blurring) the scene on every pointer move.
+- **Flagship** chapters have no backdrop blur over the animating 3D camera, which phones would re-blur every frame.
+- **View transitions** keep the focus-rack blur on desktop (it runs on the compositor); touch devices get transform + opacity only.
+
+With `prefers-reduced-motion: reduce`, Lenis, the focus pull, view-transition animations and smooth chat scrolling are off, CSS animations and transitions are cut to ~0 ms, and the flagship page shows a static exploded view. On touch devices the focus pull is disabled.
+
+## Images
+
+Product photos (`products.images`) and sample shots (`sample_photos.image_url`) are rendered with `next/image`, which serves **AVIF** (or **WebP** for browsers without AVIF) at the width the layout needs:
+
+- `formats: ["image/avif", "image/webp"]`, qualities `[60, 75]`, device sizes up to 2560 px, 31-day cache for optimized variants.
+- Only `/images/**` (no query string) and Supabase public storage URLs are optimized. Any other URL renders the tinted placeholder instead of failing the page (`src/lib/media/image-src.ts`).
+- Every image has a `sizes` hint; only the product page hero is preloaded.
+
+To prepare new photos, convert the originals once:
+
+```bash
+npm run images:optimize -- ./photos/originals public/images   # or any output dir to upload to Supabase Storage
+```
+
+The script applies EXIF orientation, converts to sRGB, caps the long edge at 2400 px (`--max=`), strips all metadata (GPS, serial numbers) and writes `<name>.avif` + `<name>.webp`. Files that are already up to date are skipped (`--force` to redo).
+
+## Testing
+
+```bash
+npm test          # Vitest: unit + integration
+npm run typecheck
+npm run lint
+```
+
+| Suite | What it covers |
+| :--- | :--- |
+| `src/app/checkout/order-flow.test.ts` | The real checkout server action, PayOS webhook, demo transfer and order status routes against the in-memory store: happy path, incompatible kits, sold-out items, payment link failure (order cancelled, stock released), forged/tampered/unsigned webhooks, failed transfers, retries, under/over-payment, expiry and late payment |
+| `src/lib/ai/rig-accuracy.test.ts` | Every body x lens and body x accessory pair in the catalog checked against an independent mount oracle; crop-mode warnings; agreement between the AI Rig Builder and the smart cart; `searchCatalog` mount filters |
+| `supabase/tests/orders.sql` | The same order scenarios against the SQL functions (run with `psql` after `npm run db:reset`, see the file header) |
+
+Before a release, also run the production build and click through checkout with demo payments: `npm run build && ALLOW_DEMO_PAYMENTS=true npm start`.
 
 ## Branching
 

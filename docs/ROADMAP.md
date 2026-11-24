@@ -70,9 +70,9 @@
 * [x] Xây dựng trang Admin quản lý đơn hàng, tồn kho và form thêm sản phẩm mới (tự động tạo vector embedding mỗi khi đăng sản phẩm).
 
 ### Tuần 6: Tối ưu Hiệu năng & Kiểm thử Toàn diện (QA)
-* [ ] Chuyển đổi toàn bộ hình ảnh sản phẩm và ảnh mẫu sang định dạng **AVIF/WebP**, cấu hình `next/image` tối ưu tốc độ tải.
-* [ ] Tinh chỉnh hiệu ứng chuyển động chỉ chạy trên GPU (`transform`, `opacity`) để đạt 60fps ổn định trên thiết bị di động, hỗ trợ tự động tắt hiệu ứng khi bật `prefers-reduced-motion`.
-* [ ] Kiểm thử toàn bộ luồng đặt hàng, kịch bản thanh toán lỗi và độ chính xác khi AI gợi ý phối ghép ngàm ống kính.
+* [x] Chuyển đổi toàn bộ hình ảnh sản phẩm và ảnh mẫu sang định dạng **AVIF/WebP**, cấu hình `next/image` tối ưu tốc độ tải.
+* [x] Tinh chỉnh hiệu ứng chuyển động chỉ chạy trên GPU (`transform`, `opacity`) để đạt 60fps ổn định trên thiết bị di động, hỗ trợ tự động tắt hiệu ứng khi bật `prefers-reduced-motion`.
+* [x] Kiểm thử toàn bộ luồng đặt hàng, kịch bản thanh toán lỗi và độ chính xác khi AI gợi ý phối ghép ngàm ống kính.
 
 ---
 
