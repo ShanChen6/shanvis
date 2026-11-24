@@ -58,11 +58,11 @@
 * [x] Tạo thanh trượt **Interactive Lens Slider**: Kéo thanh trượt để so sánh trực tiếp độ xóa phông của các khẩu độ (f/1.4 vs f/4) hoặc khử nhiễu ở mức ISO cao.
 
 ### Tuần 4: Tích hợp Trợ lý AI (AI Rig Builder)
-* [ ] Kết nối **Vercel AI SDK** với **Gemini API**.
-* [ ] Lập trình tính năng **AI Rig Builder** sử dụng kỹ thuật *Tool Calling*:
+* [x] Kết nối **Vercel AI SDK** với **Gemini API**.
+* [x] Lập trình tính năng **AI Rig Builder** sử dụng kỹ thuật *Tool Calling*:
   * Khách nhập nhu cầu tự nhiên (VD: *"Cần combo chụp đường phố nhỏ gọn và quay vlog dưới 35 triệu"*).
   * AI tự truy vấn Database, ghép 1 Body + 1 Lens cùng ngàm, kiểm tra tồn kho và trả về thẻ combo có nút **"Thêm cả bộ vào giỏ hàng"**.
-* [ ] Xây dựng tính năng **AI Spec Comparator**: Chọn 2 máy ảnh bất kỳ để AI tự đọc JSONB và tóm tắt ưu/nhược điểm bằng ngôn ngữ dễ hiểu cho người mới.
+* [x] Xây dựng tính năng **AI Spec Comparator**: Chọn 2 máy ảnh bất kỳ để AI tự đọc JSONB và tóm tắt ưu/nhược điểm bằng ngôn ngữ dễ hiểu cho người mới.
 
 ### Tuần 5: Thanh toán Tự động, Vận chuyển & Quản trị (Việt Nam)
 * [ ] Tích hợp cổng thanh toán **VietQR (PayOS hoặc SePay)**: Tạo mã QR động theo từng đơn hàng và tự động cập nhật trạng thái đã thanh toán qua Webhook trong 3 giây.

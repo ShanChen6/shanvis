@@ -49,6 +49,9 @@ src/
     products/[slug]/   Product detail page
     flagship/          Scrollytelling exploded view of the flagship body
     lens-lab/          Aperture / ISO comparison sliders
+    rig-builder/       AI Rig Builder chat
+    compare/           AI Spec Comparator
+    api/rig-builder/   Streaming agent endpoint
   components/
     ui/                Base UI (button, badge, card, input, sheet, spec-chip, focus-frame)
     bento/             Bento grid layout primitives
@@ -59,6 +62,8 @@ src/
     motion/            Smooth scroll (Lenis) and EVF focus-pull grid
     flagship/          Layered camera illustration and scroll-driven story
     lens-lab/          Compare slider and illustrated scenes
+    ai/                Rig chat, kit card, message renderer
+    compare/           Product picker, spec diff table, AI verdict
   config/              Site config (name, nav)
   data/                Static showcase content for the home page
   lib/
@@ -66,6 +71,8 @@ src/
     cart/              Cart store (localStorage) and mount compatibility rules
     motion/            Reduced-motion / hover hooks, Lenis handle
     optics/            Aperture blur and ISO noise mappings for Lens Lab
+    ai/                Gemini model, rig agent + tools, comparison schema
+    rate-limit.ts      In-memory per-IP rate limiter
     supabase/          Supabase clients (browser, server, public, admin)
   types/               Domain types (catalog)
 supabase/
@@ -99,6 +106,21 @@ Row Level Security is enabled: the storefront can read active products; writes a
   - interchangeable lens with only a fixed-lens body (e.g. X100VI) → error
   - APS-C lens on a full-frame body → warning (crop mode)
   - mount-specific accessory that fits no body → warning
+
+## AI
+
+Powered by the Vercel AI SDK (v7) and Google Gemini (`gemini-3.8-flash` by default, override with `GEMINI_MODEL`). Set `GOOGLE_GENERATIVE_AI_API_KEY` to enable; without it, AI pages show a notice and everything else works.
+
+**AI Rig Builder (`/rig-builder`)** — a `ToolLoopAgent` with two tools:
+
+| Tool | What it does |
+| :--- | :--- |
+| `searchCatalog` | Filters in-stock products by category, mount, sensor, max price, max aperture and keywords; returns compact spec summaries |
+| `proposeRig` | Validates a body + lens (+ accessories) kit on the server: products exist and are in stock, mounts match, fixed-lens bodies get no lens, accessories fit, total is within budget |
+
+Kit cards (with **Add the whole kit to cart**) are rendered only from `proposeRig` results with `valid: true`, so the model cannot put an incompatible or out-of-stock kit in front of the customer. Invalid proposals are sent back to the model with the reasons so it can fix them. The endpoint caps message size and history and is rate limited per IP (12 requests/minute, per server instance).
+
+**AI Spec Comparator (`/compare?a=…&b=…`)** — the spec table is rendered from the database; the AI summary (strengths, trade-offs, pick-by-situation, beginner tip) is generated with `Output.object` against a Zod schema, streamed in behind a Suspense boundary and cached per product pair for days.
 
 ## Motion
 
