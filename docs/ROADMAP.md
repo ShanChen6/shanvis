@@ -36,43 +36,43 @@
 ## 3. Kế Hoạch Triển Khai Chi Tiết 6 Tuần
 
 ### Tuần 1: Kiến trúc Dữ liệu & Thiết kế Hệ thống (Design System)
-* [ ] Khởi tạo dự án Next.js với TypeScript, Tailwind CSS và cấu hình thư mục chuẩn.
-* [ ] Thiết kế Database trên Supabase:
+* [x] Khởi tạo dự án Next.js với TypeScript, Tailwind CSS và cấu hình thư mục chuẩn.
+* [x] Thiết kế Database trên Supabase:
   * Bảng `products`: Tên, hãng (Sony, Canon, Fujifilm, Nikon...), giá, tồn kho, phân loại (`body`, `lens`, `accessory`).
   * Bảng `camera_specs`: Lưu thông số dạng `JSONB` (ngàm `mount_type`, cảm biến `sensor_size`, dải ISO, chống rung IBIS).
   * Bảng `product_embeddings`: Kích hoạt `pgvector` để lưu vector phục vụ AI tìm kiếm theo ngữ cảnh.
-* [ ] Xây dựng bộ UI Components cơ bản theo phong cách Bento Grid & Dark Mode.
+* [x] Xây dựng bộ UI Components cơ bản theo phong cách Bento Grid & Dark Mode.
 
 ### Tuần 2: Core E-commerce & Bộ lọc Quang học Chuyên sâu
-* [ ] Xây dựng trang danh sách sản phẩm với bộ lọc kỹ thuật: Hãng sản xuất, Ngàm ống kính (E-mount, RF, X-mount, Z-mount), Kích thước cảm biến (Full-frame, APS-C, Medium Format), Tiêu cự & Khẩu độ.
-* [ ] Xây dựng trang chi tiết sản phẩm (PDP):
+* [x] Xây dựng trang danh sách sản phẩm với bộ lọc kỹ thuật: Hãng sản xuất, Ngàm ống kính (E-mount, RF, X-mount, Z-mount), Kích thước cảm biến (Full-frame, APS-C, Medium Format), Tiêu cự & Khẩu độ.
+* [x] Xây dựng trang chi tiết sản phẩm (PDP):
   * Bảng thông số kỹ thuật trực quan.
   * Thư viện ảnh chụp mẫu (**Sample Gallery**) hiển thị kèm thẻ thông số EXIF (máy ảnh, ống kính, tiêu cự, khẩu độ, tốc độ màn trập, ISO).
-* [ ] Xây dựng **Smart Cart Drawer** (Giỏ hàng thông minh): Tự động kiểm tra tính tương thích ngàm giữa Body và Lens khi thêm vào giỏ, cảnh báo nếu chọn sai ngàm.
+* [x] Xây dựng **Smart Cart Drawer** (Giỏ hàng thông minh): Tự động kiểm tra tính tương thích ngàm giữa Body và Lens khi thêm vào giỏ, cảnh báo nếu chọn sai ngàm.
 
 ### Tuần 3: Tích hợp Chuyển động Nhiếp ảnh (Camera Motion UX)
-* [ ] Tích hợp **Lenis** cho trải nghiệm cuộn trang có quán tính vật lý mượt mà.
-* [ ] Xây dựng hiệu ứng **EVF Focus Pull** trên thẻ sản phẩm (Framer Motion): Làm mờ nhẹ các thẻ xung quanh khi di chuột vào 1 sản phẩm, hiện khung ngắm điện tử 4 góc và thông số nhanh.
-* [ ] Tạo hiệu ứng chuyển cảnh liền mạch (**Shared Element Transition**) từ ảnh ngoài trang chủ phóng to vào trang chi tiết.
-* [ ] Xây dựng trang **Scrollytelling Flagship** (GSAP ScrollTrigger): Khi người dùng cuộn chuột, hình ảnh máy ảnh chủ lực xoay góc hoặc hiển thị các lớp công nghệ (cảm biến, chip xử lý).
-* [ ] Tạo thanh trượt **Interactive Lens Slider**: Kéo thanh trượt để so sánh trực tiếp độ xóa phông của các khẩu độ (f/1.4 vs f/4) hoặc khử nhiễu ở mức ISO cao.
+* [x] Tích hợp **Lenis** cho trải nghiệm cuộn trang có quán tính vật lý mượt mà.
+* [x] Xây dựng hiệu ứng **EVF Focus Pull** trên thẻ sản phẩm (Framer Motion): Làm mờ nhẹ các thẻ xung quanh khi di chuột vào 1 sản phẩm, hiện khung ngắm điện tử 4 góc và thông số nhanh.
+* [x] Tạo hiệu ứng chuyển cảnh liền mạch (**Shared Element Transition**) từ ảnh ngoài trang chủ phóng to vào trang chi tiết.
+* [x] Xây dựng trang **Scrollytelling Flagship** (GSAP ScrollTrigger): Khi người dùng cuộn chuột, hình ảnh máy ảnh chủ lực xoay góc hoặc hiển thị các lớp công nghệ (cảm biến, chip xử lý).
+* [x] Tạo thanh trượt **Interactive Lens Slider**: Kéo thanh trượt để so sánh trực tiếp độ xóa phông của các khẩu độ (f/1.4 vs f/4) hoặc khử nhiễu ở mức ISO cao.
 
 ### Tuần 4: Tích hợp Trợ lý AI (AI Rig Builder)
-* [ ] Kết nối **Vercel AI SDK** với **Gemini API**.
-* [ ] Lập trình tính năng **AI Rig Builder** sử dụng kỹ thuật *Tool Calling*:
+* [x] Kết nối **Vercel AI SDK** với **Gemini API**.
+* [x] Lập trình tính năng **AI Rig Builder** sử dụng kỹ thuật *Tool Calling*:
   * Khách nhập nhu cầu tự nhiên (VD: *"Cần combo chụp đường phố nhỏ gọn và quay vlog dưới 35 triệu"*).
   * AI tự truy vấn Database, ghép 1 Body + 1 Lens cùng ngàm, kiểm tra tồn kho và trả về thẻ combo có nút **"Thêm cả bộ vào giỏ hàng"**.
-* [ ] Xây dựng tính năng **AI Spec Comparator**: Chọn 2 máy ảnh bất kỳ để AI tự đọc JSONB và tóm tắt ưu/nhược điểm bằng ngôn ngữ dễ hiểu cho người mới.
+* [x] Xây dựng tính năng **AI Spec Comparator**: Chọn 2 máy ảnh bất kỳ để AI tự đọc JSONB và tóm tắt ưu/nhược điểm bằng ngôn ngữ dễ hiểu cho người mới.
 
 ### Tuần 5: Thanh toán Tự động, Vận chuyển & Quản trị (Việt Nam)
-* [ ] Tích hợp cổng thanh toán **VietQR (PayOS hoặc SePay)**: Tạo mã QR động theo từng đơn hàng và tự động cập nhật trạng thái đã thanh toán qua Webhook trong 3 giây.
-* [ ] Tích hợp API **Giao Hàng Nhanh (GHN)** / **Viettel Post** để tự động tính phí ship và khai giá bảo hiểm hàng hóa.
-* [ ] Xây dựng trang Admin quản lý đơn hàng, tồn kho và form thêm sản phẩm mới (tự động tạo vector embedding mỗi khi đăng sản phẩm).
+* [x] Tích hợp cổng thanh toán **VietQR (PayOS hoặc SePay)**: Tạo mã QR động theo từng đơn hàng và tự động cập nhật trạng thái đã thanh toán qua Webhook trong 3 giây.
+* [x] Tích hợp API **Giao Hàng Nhanh (GHN)** / **Viettel Post** để tự động tính phí ship và khai giá bảo hiểm hàng hóa.
+* [x] Xây dựng trang Admin quản lý đơn hàng, tồn kho và form thêm sản phẩm mới (tự động tạo vector embedding mỗi khi đăng sản phẩm).
 
 ### Tuần 6: Tối ưu Hiệu năng & Kiểm thử Toàn diện (QA)
-* [ ] Chuyển đổi toàn bộ hình ảnh sản phẩm và ảnh mẫu sang định dạng **AVIF/WebP**, cấu hình `next/image` tối ưu tốc độ tải.
-* [ ] Tinh chỉnh hiệu ứng chuyển động chỉ chạy trên GPU (`transform`, `opacity`) để đạt 60fps ổn định trên thiết bị di động, hỗ trợ tự động tắt hiệu ứng khi bật `prefers-reduced-motion`.
-* [ ] Kiểm thử toàn bộ luồng đặt hàng, kịch bản thanh toán lỗi và độ chính xác khi AI gợi ý phối ghép ngàm ống kính.
+* [x] Chuyển đổi toàn bộ hình ảnh sản phẩm và ảnh mẫu sang định dạng **AVIF/WebP**, cấu hình `next/image` tối ưu tốc độ tải.
+* [x] Tinh chỉnh hiệu ứng chuyển động chỉ chạy trên GPU (`transform`, `opacity`) để đạt 60fps ổn định trên thiết bị di động, hỗ trợ tự động tắt hiệu ứng khi bật `prefers-reduced-motion`.
+* [x] Kiểm thử toàn bộ luồng đặt hàng, kịch bản thanh toán lỗi và độ chính xác khi AI gợi ý phối ghép ngàm ống kính.
 
 ---
 
